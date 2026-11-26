@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Волны</title><style>html,body{margin:0;height:100%;background:#0B1020;overflow:hidden}canvas{display:block;width:100%;height:auto}</style></head><body><canvas id="c" width="984" height="824"></canvas><script>var cv=document.getElementById('c'),x=cv.getContext('2d'),K=2*Math.PI/226,A=60;
+function T(s,px,py,col,sz,al){x.font='600 '+sz+'px Arial,sans-serif';x.fillStyle=col;x.textAlign=al||'left';x.fillText(s,px,py)}
+function f2(v){return v.toFixed(2).replace('.',',')}
+function ease(u){return 2*Math.PI*(u-Math.sin(4*Math.PI*u)/(4*Math.PI))}
+function wave(yc,f,col,w){x.beginPath();for(var i=40;i<=944;i+=4){var y=yc-f(i);if(i==40)x.moveTo(i,y);else x.lineTo(i,y)}x.strokeStyle=col;x.lineWidth=w;x.stroke()}
+function fr(ms){
+var t=ms/1000,ph=ease((t/10)%1),w=1.8*t,ys=[110,270,470];
+x.fillStyle='#0B1020';x.fillRect(0,0,984,824);
+for(var k=0;k<3;k++){x.strokeStyle='rgba(255,255,255,.12)';x.lineWidth=2;x.beginPath();x.moveTo(40,ys[k]);x.lineTo(944,ys[k]);x.stroke()}
+wave(ys[0],function(i){return A*Math.sin(K*i-w)},'#F2A93B',5);
+wave(ys[1],function(i){return A*Math.sin(K*i-w+ph)},'#4FB3BF',5);
+wave(ys[2],function(i){return A*(Math.sin(K*i-w)+Math.sin(K*i-w+ph))},'#FFFFFF',6);
+T('волна 1',40,44,'#F2A93B',26);T('волна 2',40,204,'#4FB3BF',26);T('сумма волн',40,344,'#FFFFFF',26);
+var dp=ph/Math.PI,f=2*Math.abs(Math.cos(ph/2));
+T('Δφ = '+f2(dp)+'π     Δ = '+f2(dp/2)+'λ',40,660,'#C9D0E6',30);
+T('амплитуда суммы = '+f2(f)+' a   (максимум 2a)',40,708,'#C9D0E6',30);
+var st=f>1.9?['усиление: волны в фазе','#F2A93B']:f<.1?['гашение: волны в противофазе','#4FB3BF']:['промежуточный случай','#98A1BF'];
+T(st[0],40,768,st[1],38);
+requestAnimationFrame(fr)}
+requestAnimationFrame(fr);</script></body></html>

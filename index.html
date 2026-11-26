@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Физика света: дисперсия и интерференция</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400..700&family=Nunito+Sans:wght@400;600&display=swap">
+<style>
+:root{--bg:#0E1328;--panel:#151C3B;--panel2:#1B2450;--line:#2A3358;--ink:#F2F3FA;--mut:#A3ABC9;--amber:#F2A93B;--teal:#4FB3BF;
+--fd:'Rubik',system-ui,'Segoe UI',Arial,sans-serif;--fb:'Nunito Sans',system-ui,'Segoe UI',Arial,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:18px;line-height:1.55;color-scheme:dark}
+a{color:var(--amber)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--teal);outline-offset:3px;border-radius:6px}
+header.top{position:sticky;top:0;z-index:10;background:rgba(14,19,40,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1120px;margin:0 auto;padding:10px 16px;display:flex;gap:6px;align-items:center;overflow-x:auto}
+.bar b{font-family:var(--fd);font-weight:600;margin-right:10px;white-space:nowrap}
+.bar a{color:var(--mut);text-decoration:none;font-weight:600;font-size:15px;padding:8px 12px;border-radius:999px;white-space:nowrap}
+.bar a:hover{color:var(--ink);background:var(--panel)}
+main{max-width:1120px;margin:0 auto;padding:0 16px}
+section{padding:56px 0 8px}
+h1,h2,h3{font-family:var(--fd);margin:0;font-weight:600;text-wrap:balance}
+h1{font-size:clamp(34px,6vw,60px);line-height:1.08}
+h2{font-size:clamp(26px,4vw,38px);line-height:1.15}
+h3{font-size:21px;line-height:1.25}
+.eb{color:var(--amber);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px}
+.lead{color:var(--mut);font-size:20px;max-width:760px;margin:12px 0 0}
+.hero{padding:64px 0 24px}
+.spec{height:14px;border-radius:7px;margin-top:28px;background:linear-gradient(90deg,#6A1FD0,#2F4CFF 18%,#19C4E8 29%,#2FD35B 39.5%,#F2E63B 51%,#F59B2B 60.5%,#E5322D 71%,#8E1B1B)}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-block;font:600 16px var(--fb);text-decoration:none;color:#1a1203;background:var(--amber);padding:12px 20px;border-radius:12px}
+.btn.o{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.o:hover{border-color:var(--amber)}
+.grid{display:grid;gap:16px;margin-top:22px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px}
+.card p{margin:0;color:var(--mut)}
+.f{font-family:var(--fd);font-size:22px;color:var(--amber);font-weight:500}
+.tag{color:var(--teal);font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-size:14px;text-transform:uppercase;letter-spacing:.05em}
+.tw{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;margin-top:22px}
+.tw table{min-width:520px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;vertical-align:-1px}
+.mod{display:flex;flex-direction:column;gap:10px}
+.mf{position:relative;aspect-ratio:984/824;border-radius:14px;overflow:hidden;background:#0B1020;border:1px solid var(--line)}
+.mf iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lab{margin-top:22px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#0B1020}
+.lab iframe{display:block;width:100%;height:780px;border:0}
+.pres{margin-top:22px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#0B1020}
+.pres iframe{display:block;width:100%;aspect-ratio:16/10;border:0}
+.warn{border-left:4px solid var(--amber);padding:8px 14px;color:var(--mut);margin-top:18px}
+footer{max-width:1120px;margin:0 auto;padding:40px 16px 56px;color:var(--mut);font-size:15px}
+@media (max-width:820px){.g2,.g3{grid-template-columns:minmax(0,1fr)}.lab iframe{height:980px}.pres iframe{aspect-ratio:4/5}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="top"><nav class="bar" aria-label="Разделы"><b>Физика света</b>
+<a href="#teoriya">Теория</a><a href="#modeli">Модели</a><a href="#laboratoriya">Лаборатория</a><a href="#prezentaciya">Презентация</a><a href="#opyty">Опыты дома</a></nav></header>
+<main>
+<section class="hero" id="start">
+<p class="eb">Физика · оптика</p>
+<h1>Дисперсия и интерференция света</h1>
+<p class="lead">Теория, живые 3D-модели с переключателями и презентация в одном месте. Всё работает на компьютере и телефоне.</p>
+<div class="spec" aria-hidden="true"></div>
+<div class="cta"><a class="btn" href="#laboratoriya">Открыть лабораторию</a><a class="btn o" href="#prezentaciya">Смотреть презентацию</a><a class="btn o" href="#teoriya">Читать теорию</a></div>
+</section>
+
+<section id="teoriya">
+<p class="eb">Теория</p>
+<h2>Свет как волна</h2>
+<p class="lead">Видимый свет — электромагнитные волны длиной примерно от 380 до 760 нм. Глаз воспринимает длину волны как цвет.</p>
+<div class="grid g2">
+<div class="card"><span class="tag">Связь величин</span><div class="f">c = λ · ν</div><p>Скорость света в вакууме c ≈ 300 000 км/с одинакова для всех цветов.</p></div>
+<div class="card"><span class="tag">Показатель преломления</span><div class="f">n = c / v</div><p>Во сколько раз свет в среде медленнее, чем в вакууме.</p></div>
+</div>
+
+<h2 style="margin-top:48px">Дисперсия</h2>
+<p class="lead">Дисперсия — зависимость показателя преломления от длины волны: n = n(λ). Для прозрачных сред короче волна — больше n (нормальная дисперсия).</p>
+<div class="tw"><table><thead><tr><th>Цвет</th><th>λ, нм</th><th>n (стекло BK7)</th></tr></thead><tbody>
+<tr><td><span class="sw" style="background:#6A1FD0"></span>фиолетовый</td><td>436</td><td>1,5267</td></tr>
+<tr><td><span class="sw" style="background:#19C4E8"></span>голубой</td><td>486</td><td>1,5224</td></tr>
+<tr><td><span class="sw" style="background:#F2E63B"></span>жёлтый</td><td>589</td><td>1,5168</td></tr>
+<tr><td><span class="sw" style="background:#E5322D"></span>красный</td><td>656</td><td>1,5143</td></tr></tbody></table></div>
+<div class="grid g3">
+<div class="card"><span class="tag">1. Преломление</span><div class="f">sin α = n · sin β</div><p>Закон Снеллиуса: луч входит в стекло под углом α и идёт под углом β.</p></div>
+<div class="card"><span class="tag">2. n зависит от λ</span><div class="f">n(фиол.) &gt; n(красн.)</div><p>Короткие волны замедляются в стекле сильнее длинных.</p></div>
+<div class="card"><span class="tag">3. Разные углы</span><div class="f">β(фиол.) &lt; β(красн.)</div><p>Фиолетовый луч сильнее отклоняется, и белый свет раскладывается в спектр.</p></div>
+</div>
+<div class="grid g2">
+<div class="card"><span class="tag">Формула Коши</span><div class="f">n(λ) ≈ A + B / λ²</div><p>A и B — постоянные вещества.</p></div>
+<div class="card"><span class="tag">Тонкая призма</span><div class="f">δ ≈ (n − 1) · A</div><p>A — преломляющий угол призмы. Угол между крайними лучами равен (n фиол. − n красн.)·A.</p></div>
+</div>
+<div class="grid g2">
+<div class="card"><h3>Радуга</h3><p>Капля воды преломляет и отражает свет. Красный выходит под углом около 42°, фиолетовый около 40°.</p></div>
+<div class="card"><h3>Линзы и оптоволокно</h3><p>У простой линзы цветные каёмки, их убирает ахромат. В волокне разные λ идут с разной скоростью, и импульс расплывается.</p></div>
+</div>
+
+<h2 style="margin-top:48px">Интерференция</h2>
+<p class="lead">Интерференция — сложение когерентных волн: в пространстве возникает устойчивая картина усиления и ослабления света. Когерентные волны имеют одну частоту и постоянную разность фаз.</p>
+<div class="grid g2">
+<div class="card"><span class="tag">Усиление</span><div class="f">Δ = m · λ</div><p>Волны приходят в фазе, m = 0, 1, 2, …</p></div>
+<div class="card"><span class="tag">Ослабление</span><div class="f">Δ = (m + ½) · λ</div><p>Волны приходят в противофазе: свет гасит свет.</p></div>
+</div>
+<div class="grid g2">
+<div class="card"><h3>Опыт Юнга: две щели</h3><div class="f">Δx = λ · L / d</div><p>Расстояние между полосами. Положение ярких полос x(m) = m·λ·L/d. Пример: λ = 550 нм, L = 2 м, d = 0,5 мм даёт Δx ≈ 2,2 мм. Красный свет даёт более широкие полосы, чем синий.</p></div>
+<div class="card"><h3>Тонкие плёнки</h3><div class="f">2nd = mλ — гашение<br>2nd = (m + ½)λ — усиление</div><p>Для отражённого света при нормальном падении. Мыльная плёнка n = 1,33, d = 300 нм: при m = 1 получаем λ = 532 нм, плёнка кажется зелёной.</p></div>
+</div>
+<div class="tw"><table><thead><tr><th>Признак</th><th>Дисперсия</th><th>Интерференция</th></tr></thead><tbody>
+<tr><td>Суть</td><td>n зависит от длины волны</td><td>сложение когерентных волн</td></tr>
+<tr><td>Результат</td><td>белый свет раскладывается в спектр</td><td>чередование светлых и тёмных полос</td></tr>
+<tr><td>Условие</td><td>среда с n(λ)</td><td>когерентные источники</td></tr>
+<tr><td>Формула</td><td>n ≈ A + B / λ²</td><td>Δ = mλ — усиление</td></tr>
+<tr><td>Примеры</td><td>радуга, призма</td><td>мыльная плёнка, опыт Юнга</td></tr></tbody></table></div>
+</section>
+
+<section id="modeli">
+<p class="eb">Модели</p>
+<h2>Четыре демонстрации</h2>
+<p class="lead">Параметры в моделях переключаются сами, чтобы было видно, что меняется. Свои значения задавайте в лаборатории ниже.</p>
+<div class="grid g2">
+<div class="mod"><h3>Разложение света призмой</h3><div class="mf"><iframe data-src="models/prism.html" title="Модель призмы" scrolling="no"></iframe></div><p style="color:var(--mut);margin:0">δ ≈ (n − 1)·A. Дисперсия на модели усилена для наглядности.</p></div>
+<div class="mod"><h3>Сложение волн</h3><div class="mf"><iframe data-src="models/waves.html" title="Модель сложения волн" scrolling="no"></iframe></div><p style="color:var(--mut);margin:0">Усиление при Δ = mλ, гашение при Δ = (m + ½)λ.</p></div>
+<div class="mod"><h3>Опыт Юнга</h3><div class="mf"><iframe data-src="models/young.html" title="Модель опыта Юнга" scrolling="no"></iframe></div><p style="color:var(--mut);margin:0">Полосы на экране: Δx = λL/d.</p></div>
+<div class="mod"><h3>Тонкая плёнка</h3><div class="mf"><iframe data-src="models/film.html" title="Модель тонкой плёнки" scrolling="no"></iframe></div><p style="color:var(--mut);margin:0">Цвет плёнки зависит от толщины и угла взгляда.</p></div>
+</div>
+</section>
+
+<section id="laboratoriya">
+<p class="eb">Интерактивно</p>
+<h2>Лаборатория света</h2>
+<p class="lead">3D-сцены с переключателями: призма, две щели и тонкая плёнка. Вращайте сцену мышью или пальцем, колесо мыши меняет масштаб.</p>
+<div class="grid g3">
+<div class="card"><h3>Призма</h3><p>Цвет света, материал, угол призмы и сила дисперсии.</p></div>
+<div class="card"><h3>Две щели</h3><p>Включайте щели, меняйте λ, d и L: полосы перестраиваются сразу.</p></div>
+<div class="card"><h3>Тонкая плёнка</h3><p>Толщина, показатель преломления и угол взгляда.</p></div>
+</div>
+<div class="lab"><iframe data-src="lab.html" title="Лаборатория света"></iframe></div>
+<div class="warn"><b>Задания ученикам.</b> 1) Найдите материал с самым широким веером цветов. 2) Добейтесь тёмной центральной полосы в опыте Юнга. 3) Подберите толщину плёнки, при которой зелёный свет не отражается.</div>
+</section>
+
+<section id="prezentaciya">
+<p class="eb">Презентация</p>
+<h2>Слайды для урока</h2>
+<p class="lead">16 слайдов с теорией и моделями. Листайте кнопками, стрелками клавиатуры или свайпом. Кнопка «Заметки» показывает подсказки для учителя.</p>
+<div class="pres"><iframe data-src="slides.html" title="Презентация" allow="fullscreen" allowfullscreen></iframe></div>
+</section>
+
+<section id="opyty">
+<p class="eb">Практика</p>
+<h2>Опыты, которые можно повторить</h2>
+<div class="grid g3">
+<div class="card"><h3>Стакан воды</h3><p>Поставьте стакан с водой на край подоконника в солнечный день. На полу или стене может появиться радужная полоска: это дисперсия.</p></div>
+<div class="card"><h3>Мыльная плёнка</h3><p>Затяните проволочную рамку мыльной водой и держите вертикально. Цветные полосы сползают вниз, а сверху плёнка тёмная.</p></div>
+<div class="card"><h3>Компакт-диск</h3><p>Наклоняйте диск под лампой: видны радужные полосы. Это родственное явление, дифракция света на дорожках.</p></div>
+</div>
+<div class="warn">Лазерную указку нельзя направлять в глаза. Не смотрите на Солнце.</div>
+</section>
+</main>
+<footer>Дисперсия и интерференция света. Модели упрощены и предназначены для демонстрации.</footer>
+<script>
+(function(){
+var fr=[].slice.call(document.querySelectorAll('iframe[data-src]'));
+function load(f){if(!f.getAttribute('src'))f.setAttribute('src',f.dataset.src)}
+if('IntersectionObserver' in window){
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){load(e.target);io.unobserve(e.target)}})},{rootMargin:'300px'});
+fr.forEach(function(f){io.observe(f)});
+}else fr.forEach(load);
+window.addEventListener('message',function(e){var d=e.data;if(d&&d.go==='lab'){var el=document.getElementById('laboratoriya');if(el)el.scrollIntoView({behavior:'smooth'})}});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Опыт Юнга</title><style>html,body{margin:0;height:100%;background:#0B1020;overflow:hidden}canvas{display:block;width:100%;height:auto}</style></head><body><canvas id="c" width="984" height="824"></canvas><script>var cv=document.getElementById('c'),x=cv.getContext('2d'),W=984,H=824,FONT='Arial,sans-serif',TAU=Math.PI*2,NX=52,NZ=44,NV=(NX+1)*(NZ+1),PX=new Float32Array(NV),PY=new Float32Array(NV),DZ=new Float32Array(NV),VV=new Float32Array(NV),KEY=new Float32Array(NX*NZ),ORD=[];
+for(var o=0;o<NX*NZ;o++)ORD.push(o);
+function wl(l){var r=0,g=0,b=0;if(l<440){r=(440-l)/60;b=1}else if(l<490){g=(l-440)/50;b=1}else if(l<510){g=1;b=(510-l)/20}else if(l<580){r=(l-510)/70;g=1}else if(l<645){r=1;g=(645-l)/65}else r=1;var f=l<420?.35+.65*(l-380)/40:l>700?.35+.65*(780-l)/80:1;return[255*r*f,255*g*f,255*b*f]}
+function lp(a,b,s){return a+(b-a)*s}
+function T(s,p,col,sz,al){x.font='700 '+sz+'px '+FONT;x.fillStyle=col;x.textAlign=al||'left';x.fillText(s,p[0],p[1])}
+function ln(a,b,col,w){x.strokeStyle=col;x.lineWidth=w;x.beginPath();x.moveTo(a[0],a[1]);x.lineTo(b[0],b[1]);x.stroke()}
+function pl(ps,f,s){x.beginPath();x.moveTo(ps[0][0],ps[0][1]);for(var i=1;i<ps.length;i++)x.lineTo(ps[i][0],ps[i][1]);x.closePath();x.fillStyle=f;x.fill();x.strokeStyle=s;x.lineWidth=1;x.stroke()}
+var CF=[{lam:550,d:.5,ph:0,a2:1,pal:0},{lam:450,d:.5,ph:0,a2:1,pal:0},{lam:650,d:.5,ph:0,a2:1,pal:0},{lam:550,d:.2,ph:0,a2:1,pal:0},{lam:550,d:.9,ph:0,a2:1,pal:0},{lam:550,d:.5,ph:Math.PI,a2:1,pal:0},{lam:550,d:.5,ph:0,a2:0,pal:0},{lam:550,d:.5,ph:0,a2:1,pal:1}],NC=CF.length;
+function fr(ms){
+var t=ms/1000,SG=5,i=Math.floor(t/SG)%NC,pv=CF[(i+NC-1)%NC],cu=CF[i],s=Math.min(1,(t%SG)/1.2);s=s*s*(3-2*s);
+var lam=lp(pv.lam,cu.lam,s),d=lp(pv.d,cu.d,s),ph=lp(pv.ph,cu.ph,s),a2=lp(pv.a2,cu.a2,s),pal=cu.pal,k=TAU/(lam/10),dM=30+(d-.05)/.95*170,x0=-260,xs=x0+380,z1=-dM/2,z2=dM/2,tt=t*2.4,base=wl(lam);
+var yaw=.5+.3*Math.sin(t*.18),cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(.62),sp=Math.sin(.62),F=Math.min(W,H*1.3)*1.1;
+function pj(X,Y,Z){var qx=X-(x0+xs)/2,x1=qx*cy+Z*sy,z1_=-qx*sy+Z*cy,y2=Y*cp-z1_*sp,z2_=Y*sp+z1_*cp,dz=1150-z2_,s=F/dz;return[W/2+x1*s,H/2-y2*s,dz]}
+x.fillStyle='#0B1020';x.fillRect(0,0,W,H);
+var i2,j,idx;
+for(j=0;j<=NZ;j++){var z=-260+520*j/NZ,ra2=(z-z1)*(z-z1),rb2=(z-z2)*(z-z2);
+for(i2=0;i2<=NX;i2++){idx=j*(NX+1)+i2;var X=x0+6+(xs-x0-6)*i2/NX,dx=X-x0,ra=Math.sqrt(dx*dx+ra2),rb=Math.sqrt(dx*dx+rb2),v=Math.sin(k*ra-tt)/Math.sqrt(1+ra/150)+a2*Math.sin(k*rb-tt+ph)/Math.sqrt(1+rb/150),p=pj(X,20*v,z);
+PX[idx]=p[0];PY[idx]=p[1];DZ[idx]=p[2];VV[idx]=Math.max(-1,Math.min(1,v/1.5))}}
+var q=0;for(j=0;j<NZ;j++)for(i2=0;i2<NX;i2++){idx=j*(NX+1)+i2;KEY[q++]=DZ[idx]+DZ[idx+1]+DZ[idx+NX+1]+DZ[idx+NX+2]}
+ORD.sort(function(a,b){return KEY[b]-KEY[a]});
+for(var qi=0;qi<ORD.length;qi++){var qq=ORD[qi],qj=(qq/NX)|0,a=qj*(NX+1)+qq-qj*NX,b=a+1,c=a+NX+2,d2=a+NX+1,u=(VV[a]+VV[b]+VV[c]+VV[d2])/4,col;
+if(pal){var m=.14+.86*Math.abs(u);col=u>0?[242*m,169*m,59*m]:[79*m,179*m,191*m]}else{var f=.12+.88*(u+1)/2;col=[base[0]*f,base[1]*f,base[2]*f]}
+var cs='rgb('+(col[0]|0)+','+(col[1]|0)+','+(col[2]|0)+')';
+x.beginPath();x.moveTo(PX[a],PY[a]);x.lineTo(PX[b],PY[b]);x.lineTo(PX[c],PY[c]);x.lineTo(PX[d2],PY[d2]);x.closePath();x.fillStyle=cs;x.fill();x.strokeStyle=cs;x.lineWidth=.7;x.stroke()}
+[[-270,z1-7],[z1+7,z2-7],[z2+7,270]].forEach(function(r){pl([pj(x0-4,-10,r[0]),pj(x0-4,70,r[0]),pj(x0-4,70,r[1]),pj(x0-4,-10,r[1])],'#4A5688','#8B97C9')});
+var s1=pj(x0,0,z1),s2=pj(x0,0,z2);var dn=s1[1]>s2[1]?1:-1;T('щель 1',[s1[0]-22,s1[1]+(dn>0?46:-30)],'#fff',24,'right');T('щель 2',[s2[0]-22,s2[1]+(dn>0?-30:46)],a2>.5?'#fff':'#5b6590',24,'right');
+var bc=pal?'rgb(242,169,59)':'rgb('+(base[0]|0)+','+(base[1]|0)+','+(base[2]|0)+')';
+ln(pj(xs,0,-270),pj(xs,0,270),'rgba(220,228,255,.8)',3);
+for(var zz=-260;zz<=260;zz+=4){var ra3=Math.sqrt((xs-x0)*(xs-x0)+(zz-z1)*(zz-z1)),rb3=Math.sqrt((xs-x0)*(xs-x0)+(zz-z2)*(zz-z2)),I=(1+a2*a2+2*a2*Math.cos(k*(rb3-ra3)+ph))/(1+a2)/(1+a2);
+ln(pj(xs,0,zz),pj(xs,3+I*85,zz),bc,2)}
+var lb=pj(xs,110,0);T('экран: яркость',[lb[0],lb[1]-6],'#C9D0E6',24,'center');
+T('λ = '+Math.round(lam)+' нм',[24,44],'#fff',26);
+T('расстояние между щелями d = '+d.toFixed(2).replace('.',',')+' мм',[24,82],'#C9D0E6',24);
+T(a2<.5?'вторая щель закрыта: полос нет':ph>1.5?'вторая щель в противофазе: центр тёмный':'обе щели открыты, волны в фазе',[24,792],'#F2A93B',26);
+requestAnimationFrame(fr)}
+requestAnimationFrame(fr);</script></body></html>
